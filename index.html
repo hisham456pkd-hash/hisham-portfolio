@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -53,6 +53,17 @@
     a{ color: inherit; text-decoration: none; }
     .container{ width: min(var(--max), calc(100% - 32px)); margin: 0 auto; }
 
+    /* ===== Scroll progress bar ===== */
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      z-index: 9999;
+    }
+
     /* NAV */
     .nav{
       position: sticky;
@@ -80,6 +91,7 @@
       font-weight: 700;
       letter-spacing: 0.2px;
       font-family: Poppins, Inter, sans-serif;
+      min-width: 220px;
     }
     .brand-badge{
       width: 34px; height: 34px;
@@ -89,11 +101,13 @@
       display:grid; place-items:center;
       color: #001018;
       font-weight: 800;
+      flex: 0 0 auto;
     }
 
+    /* Desktop links */
     .nav-links{
       display:flex;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
       align-items:center;
       justify-content: center;
@@ -103,17 +117,24 @@
       border-radius: 12px;
       color: var(--muted);
       border: 1px solid transparent;
+      font-weight: 700;
     }
     .nav-links a:hover{
       color: var(--text);
       border-color: var(--border);
       background: var(--surface);
     }
+    .nav-links a.active{
+      color: var(--text);
+      border-color: rgba(56,189,248,0.35);
+      background: rgba(56,189,248,0.10);
+    }
 
     .nav-actions{
       display:flex;
       gap: 10px;
       align-items:center;
+      justify-content: flex-end;
     }
 
     .btn{
@@ -127,8 +148,9 @@
       background: var(--surface);
       color: var(--text);
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 800;
       transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      white-space: nowrap;
     }
     .btn:hover{
       transform: translateY(-1px);
@@ -142,6 +164,57 @@
       box-shadow: 0 16px 40px rgba(56,189,248,0.18);
     }
     .btn.primary:hover{ filter: brightness(1.05); }
+
+    /* Mobile hamburger */
+    .hamburger{
+      display:none;
+      width: 46px;
+      height: 42px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-weight: 900;
+      user-select:none;
+    }
+
+    /* Mobile panel */
+    .mobile-panel{
+      display:none;
+      border-top: 1px solid var(--border);
+      padding: 10px 0 14px;
+    }
+    .mobile-panel.open{ display:block; }
+
+    .mobile-links{
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .mobile-links a{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.06);
+      color: var(--muted);
+      font-weight: 800;
+    }
+    [data-theme="light"] .mobile-links a{ background: rgba(2,6,23,0.03); }
+    .mobile-links a.active{
+      color: var(--text);
+      border-color: rgba(56,189,248,0.35);
+      background: rgba(56,189,248,0.10);
+    }
+
+    .mobile-actions{
+      display:flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .mobile-actions .btn{ flex: 1; }
 
     /* HERO */
     .hero{ padding: 56px 0 22px; }
@@ -191,7 +264,7 @@
       border: 1px solid var(--border);
       background: rgba(0,0,0,0.08);
       color: var(--muted);
-      font-weight: 600;
+      font-weight: 800;
     }
     [data-theme="light"] .kicker{ background: rgba(2,6,23,0.04); }
 
@@ -238,13 +311,13 @@
       border: 1px solid var(--border);
       background: rgba(0,0,0,0.08);
       color: var(--muted);
-      font-weight: 600;
+      font-weight: 800;
       font-size: 13px;
     }
     [data-theme="light"] .pill{ background: rgba(2,6,23,0.04); }
 
     /* SECTIONS */
-    section{ padding: 28px 0; }
+    section{ padding: 28px 0; scroll-margin-top: 92px; }
     .section-title{
       display:flex;
       align-items: flex-end;
@@ -285,6 +358,7 @@
       border-radius: 14px;
       background: rgba(0,0,0,0.06);
       color: var(--muted);
+      font-weight: 600;
     }
     [data-theme="light"] .list li{ background: rgba(2,6,23,0.03); }
 
@@ -315,7 +389,7 @@
     .tags{ display:flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
     .tag{
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       padding: 6px 10px;
       border-radius: 999px;
       background: rgba(56,189,248,0.12);
@@ -333,7 +407,7 @@
     }
     .link{
       color: var(--text);
-      font-weight: 700;
+      font-weight: 800;
       padding: 8px 10px;
       border-radius: 12px;
       border: 1px solid var(--border);
@@ -371,40 +445,73 @@
     .d3 { transition-delay: .15s; }
     .d4 { transition-delay: .20s; }
 
+    /* ===== Mobile layout ===== */
+    @media (max-width: 860px) {
+      .nav-links, .nav-actions { display:none; }
+      .hamburger { display:flex; }
+    }
+
+    /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .reveal, .card, .btn { transition: none !important; }
       .reveal { opacity: 1; transform: none; }
+      .progress { display:none; }
     }
   </style>
 </head>
 
 <body>
+  <div class="progress" id="progress"></div>
+
   <!-- NAV -->
   <div class="nav">
-    <div class="container nav-inner">
-      <div class="brand">
-        <div class="brand-badge">MH</div>
-        <div>
-          Mohamed Hisham A R
-          <div style="font-size:12px;color:var(--muted);font-weight:600; margin-top:-2px;">
-            CSE Student • Internship Focus
+    <div class="container">
+      <div class="nav-inner">
+        <div class="brand">
+          <div class="brand-badge">MH</div>
+          <div>
+            Mohamed Hisham A R
+            <div style="font-size:12px;color:var(--muted);font-weight:600; margin-top:-2px;">
+              CSE Student • Internship Focus
+            </div>
           </div>
         </div>
+
+        <!-- Desktop links -->
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#about" data-link="about">About</a>
+          <a href="#skills" data-link="skills">Skills</a>
+          <a href="#work" data-link="work">Practice</a>
+          <a href="#learning" data-link="learning">Learning</a>
+          <a href="#contact" data-link="contact">Contact</a>
+        </nav>
+
+        <!-- Desktop actions -->
+        <div class="nav-actions">
+          <a class="btn" href="resume.html">📄 Resume</a>
+          <button class="btn" id="themeBtn" type="button" aria-label="Toggle theme">🌓 Theme</button>
+          <a class="btn primary" href="#contact">📩 Hire / Intern</a>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <div class="hamburger" id="hamburger" aria-label="Open menu" role="button" tabindex="0">☰</div>
       </div>
 
-      <nav class="nav-links" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#work">Practice</a>
-        <a href="#learning">Learning</a>
-        <a href="#contact">Contact</a>
-      </nav>
+      <!-- Mobile panel -->
+      <div class="mobile-panel" id="mobilePanel">
+        <div class="mobile-links" aria-label="Mobile navigation">
+          <a href="#about" data-link="about">About</a>
+          <a href="#skills" data-link="skills">Skills</a>
+          <a href="#work" data-link="work">Practice</a>
+          <a href="#learning" data-link="learning">Learning</a>
+          <a href="#contact" data-link="contact">Contact</a>
+        </div>
 
-      <div class="nav-actions">
-        <a class="btn" href="resume.html">📄 Resume</a>
-        <button class="btn" id="themeBtn" type="button" aria-label="Toggle theme">🌓 Theme</button>
-        <a class="btn primary" href="#contact">📩 Hire / Intern</a>
+        <div class="mobile-actions">
+          <a class="btn" href="resume.html">📄 Resume</a>
+          <button class="btn" id="themeBtnMobile" type="button">🌓 Theme</button>
+        </div>
       </div>
     </div>
   </div>
@@ -523,10 +630,7 @@
       <div class="cards-3">
         <article class="card work reveal d1">
           <h3>HTML & CSS Practice</h3>
-          <p>
-            Built small layouts to understand structure,
-            responsiveness, and clean UI design.
-          </p>
+          <p>Built small layouts to understand structure, responsiveness, and clean UI design.</p>
           <div class="tags">
             <span class="tag">HTML</span>
             <span class="tag">CSS</span>
@@ -539,10 +643,7 @@
 
         <article class="card work reveal d2">
           <h3>JavaScript Basics Practice</h3>
-          <p>
-            Practiced DOM manipulation, events, and logic
-            through small exercises.
-          </p>
+          <p>Practiced DOM manipulation, events, and logic through small exercises.</p>
           <div class="tags">
             <span class="tag">JavaScript</span>
             <span class="tag green">DOM</span>
@@ -555,10 +656,7 @@
 
         <article class="card work reveal d3">
           <h3>Python & C Practice</h3>
-          <p>
-            Solved beginner problems to improve logical thinking
-            and strengthen fundamentals.
-          </p>
+          <p>Solved beginner problems to improve logical thinking and strengthen fundamentals.</p>
           <div class="tags">
             <span class="tag">Python</span>
             <span class="tag">C</span>
@@ -614,17 +712,13 @@
         <div class="card content reveal d1">
           <ul class="list">
             <li>📧 Email:
-              <a href="mailto:hisham456pkd@gmail.com">
-                <b style="color:var(--text);">hisham456pkd@gmail.com</b>
-              </a>
+              <a href="mailto:hisham456pkd@gmail.com"><b style="color:var(--text);">hisham456pkd@gmail.com</b></a>
             </li>
-
             <li>🔗 LinkedIn:
               <a href="https://www.linkedin.com/in/mohamed-hisham-249110361" target="_blank" rel="noreferrer">
                 <b style="color:var(--text);">linkedin.com/in/mohamed-hisham</b>
               </a>
             </li>
-
             <li>💻 GitHub:
               <a href="https://github.com/hisham456pkd-hash" target="_blank" rel="noreferrer">
                 <b style="color:var(--text);">github.com/hisham456pkd-hash</b>
@@ -637,12 +731,10 @@
 
         <div class="card content reveal d2">
           <p style="margin-top:0;">Want to contact me quickly? 👇</p>
-
           <a class="btn primary"
              href="mailto:hisham456pkd@gmail.com?subject=Internship%20Opportunity%20-%20Mohamed%20Hisham%20A%20R">
             ✉️ Email Me
           </a>
-
           <p style="margin:12px 0 0; color:var(--muted);">
             Tip: Keep your GitHub updated weekly — even small practice pushes matter 😄
           </p>
@@ -658,9 +750,10 @@
   </footer>
 
   <script>
-    // Theme toggle
+    // Theme toggle (desktop + mobile)
     const root = document.documentElement;
-    const btn = document.getElementById("themeBtn");
+    const themeBtn = document.getElementById("themeBtn");
+    const themeBtnMobile = document.getElementById("themeBtnMobile");
 
     function setTheme(theme){
       root.setAttribute("data-theme", theme);
@@ -668,16 +761,15 @@
     }
 
     const saved = localStorage.getItem("theme");
-    if(saved){
-      setTheme(saved);
-    } else {
-      setTheme("dark");
-    }
+    setTheme(saved ? saved : "dark");
 
-    btn.addEventListener("click", () => {
+    function toggleTheme(){
       const current = root.getAttribute("data-theme");
       setTheme(current === "light" ? "dark" : "light");
-    });
+    }
+
+    themeBtn.addEventListener("click", toggleTheme);
+    themeBtnMobile.addEventListener("click", toggleTheme);
 
     // Footer year
     document.getElementById("year").textContent = new Date().getFullYear();
@@ -692,8 +784,58 @@
         }
       }
     }, { threshold: 0.12 });
-
     reveals.forEach(el => io.observe(el));
+
+    // Mobile menu toggle
+    const hamburger = document.getElementById("hamburger");
+    const mobilePanel = document.getElementById("mobilePanel");
+
+    function toggleMenu(){
+      mobilePanel.classList.toggle("open");
+      hamburger.textContent = mobilePanel.classList.contains("open") ? "✕" : "☰";
+    }
+
+    hamburger.addEventListener("click", toggleMenu);
+    hamburger.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") toggleMenu();
+    });
+
+    // Close menu after clicking a link
+    mobilePanel.querySelectorAll("a").forEach(a => {
+      a.addEventListener("click", () => {
+        mobilePanel.classList.remove("open");
+        hamburger.textContent = "☰";
+      });
+    });
+
+    // Active section highlight (desktop + mobile)
+    const sectionIds = ["about","skills","work","learning","contact"];
+    const sections = sectionIds.map(id => document.getElementById(id));
+    const navLinks = document.querySelectorAll('[data-link]');
+
+    function setActive(id){
+      navLinks.forEach(link => {
+        link.classList.toggle("active", link.getAttribute("data-link") === id);
+      });
+    }
+
+    const navObserver = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setActive(visible.target.id);
+    }, { threshold: [0.35, 0.5, 0.65] });
+
+    sections.forEach(sec => navObserver.observe(sec));
+
+    // Scroll progress bar
+    const progress = document.getElementById("progress");
+    window.addEventListener("scroll", () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progress.style.width = pct + "%";
+    }, { passive: true });
   </script>
 </body>
 </html>
