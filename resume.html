@@ -51,7 +51,18 @@
     a{ color: inherit; text-decoration:none; }
     .container{ width:min(var(--max), calc(100% - 32px)); margin: 0 auto; }
 
-    /* Top bar */
+    /* ===== Scroll progress ===== */
+    .progress{
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      z-index: 9999;
+    }
+
+    /* ===== TOPBAR ===== */
     .topbar{
       position: sticky;
       top: 0;
@@ -63,27 +74,38 @@
     [data-theme="light"] .topbar{
       background: linear-gradient(to bottom, rgba(248,250,252,0.90), rgba(248,250,252,0.65));
     }
+
     .topbar-inner{
       display:flex;
       align-items:center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 14px;
       padding: 14px 0;
     }
+
     .brand{
       display:flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .brand b{
+      align-items:center;
+      gap: 10px;
       font-family: Poppins, Inter, sans-serif;
-      letter-spacing: -0.2px;
-      font-size: 16px;
+      font-weight: 700;
     }
-    .brand span{
+    .brand-badge{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 12px 30px rgba(56,189,248,0.18);
+      display:grid; place-items:center;
+      color: #001018;
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+    .brand small{
+      display:block;
+      margin-top:-2px;
       color: var(--muted);
       font-weight: 600;
-      font-size: 12px;
+      font-family: Inter, system-ui, sans-serif;
     }
 
     .btn{
@@ -97,8 +119,9 @@
       background: var(--surface);
       color: var(--text);
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 800;
       transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      white-space: nowrap;
     }
     .btn:hover{
       transform: translateY(-1px);
@@ -111,29 +134,76 @@
       color: #001018;
       box-shadow: 0 16px 40px rgba(56,189,248,0.18);
     }
-    .btnrow{ display:flex; gap: 10px; flex-wrap: wrap; justify-content:flex-end; }
+    .btn.primary:hover{ filter: brightness(1.05); }
 
-    /* Resume card */
-    .sheet{
-      margin: 24px auto 46px;
-      border-radius: var(--radius);
+    .actions{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content: flex-end;
+    }
+
+    /* Mobile hamburger */
+    .hamburger{
+      display:none;
+      width: 46px;
+      height: 42px;
+      border-radius: 14px;
       border: 1px solid var(--border);
       background: var(--surface);
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-weight: 900;
+      user-select:none;
+    }
+
+    /* Mobile panel */
+    .mobile-panel{
+      display:none;
+      border-top: 1px solid var(--border);
+      padding: 10px 0 14px;
+    }
+    .mobile-panel.open{ display:block; }
+    .mobile-actions{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .mobile-actions .btn{ width: 100%; justify-content:center; }
+
+    @media (max-width: 860px){
+      .actions{ display:none; }
+      .hamburger{ display:flex; }
+    }
+
+    /* ===== CONTENT ===== */
+    main{ padding: 22px 0 44px; }
+
+    .sheet{
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
+      transition: transform .15s ease, border-color .15s ease;
     }
+    .sheet:hover{ transform: translateY(-2px); border-color: rgba(56,189,248,0.25); }
+
     .sheet-inner{ padding: 22px; }
 
     .header{
       display:flex;
       justify-content: space-between;
       gap: 18px;
-      align-items:flex-start;
       flex-wrap: wrap;
+      align-items:flex-start;
       padding-bottom: 14px;
       border-bottom: 1px solid var(--border);
       margin-bottom: 14px;
     }
+
     .name{
       font-family: Poppins, Inter, sans-serif;
       font-size: 28px;
@@ -141,18 +211,15 @@
       line-height: 1.1;
       letter-spacing: -0.3px;
     }
-    .role{
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-weight: 700;
-    }
+    .role{ margin: 6px 0 0; color: var(--muted); font-weight: 800; }
+
     .meta{
       display:flex;
       flex-direction: column;
       gap: 6px;
       min-width: 260px;
       color: var(--muted);
-      font-weight: 600;
+      font-weight: 700;
     }
     .meta a b{ color: var(--text); }
     .meta-item{ display:flex; gap: 10px; align-items:center; }
@@ -187,7 +254,7 @@
     .chips{ display:flex; flex-wrap: wrap; gap: 8px; }
     .chip{
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
       padding: 6px 10px;
       border-radius: 999px;
       background: rgba(56,189,248,0.12);
@@ -213,15 +280,18 @@
       flex-wrap: wrap;
     }
     .item-title b{ color: var(--text); }
-    .item-title span{ color: var(--muted); font-weight: 700; }
+    .item-title span{ color: var(--muted); font-weight: 800; }
 
-    /* Print */
-    @media print{
-      .topbar{ display:none; }
-      body{ background: #fff; color: #111; }
-      .sheet, .section{ box-shadow:none; background:#fff; }
-      .p, .list, .meta{ color:#333; }
-      a{ color:#111; text-decoration:none; }
+    /* Reveal animations */
+    .reveal{
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .6s ease, transform .6s ease;
+      will-change: opacity, transform;
+    }
+    .reveal.show{
+      opacity: 1;
+      transform: translateY(0);
     }
 
     :focus-visible{
@@ -229,191 +299,255 @@
       outline-offset: 2px;
       border-radius: 12px;
     }
+
+    /* Print */
+    @media print{
+      .topbar, .progress{ display:none; }
+      body{ background:#fff; color:#111; }
+      .sheet, .section{ box-shadow:none; background:#fff; }
+      .p, .list, .meta{ color:#333; }
+      a{ color:#111; text-decoration:none; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      .reveal, .btn, .sheet{ transition:none !important; }
+      .reveal{ opacity:1; transform:none; }
+      .progress{ display:none; }
+    }
   </style>
 </head>
 
 <body>
-  <!-- TOP BAR -->
+  <div class="progress" id="progress"></div>
+
+  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="container topbar-inner">
-      <div class="brand">
-        <b>Resume — Mohamed Hisham A R</b>
-        <span>Internship-focused • Dark/Light + Print</span>
+    <div class="container">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="brand-badge">MH</div>
+          <div>
+            Resume
+            <small>Mohamed Hisham A R • Internship Focus</small>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="btn" href="index.html">🏠 Portfolio</a>
+          <button class="btn" id="themeBtn" type="button">🌓 Theme</button>
+          <button class="btn primary" type="button" onclick="window.print()">🖨️ Save PDF</button>
+        </div>
+
+        <div class="hamburger" id="hamburger" role="button" tabindex="0">☰</div>
       </div>
 
-      <div class="btnrow">
-        <a class="btn" href="index.html">🏠 Back to Portfolio</a>
-        <button class="btn" id="themeBtn" type="button">🌓 Theme</button>
-        <button class="btn primary" onclick="window.print()">🖨️ Print / Save PDF</button>
+      <div class="mobile-panel" id="mobilePanel">
+        <div class="mobile-actions">
+          <a class="btn" href="index.html">🏠 Portfolio</a>
+          <button class="btn" id="themeBtnMobile" type="button">🌓 Theme</button>
+          <button class="btn primary" type="button" onclick="window.print()">🖨️ Save PDF</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- RESUME -->
-  <main class="container">
-    <div class="sheet">
-      <div class="sheet-inner">
-        <div class="header">
-          <div>
-            <h1 class="name">Mohamed Hisham A R</h1>
-            <p class="role">Computer Science & Engineering Student • Seeking Internship</p>
+  <main>
+    <div class="container">
+      <div class="sheet reveal show">
+        <div class="sheet-inner">
+
+          <div class="header">
+            <div>
+              <h1 class="name">Mohamed Hisham A R</h1>
+              <p class="role">Computer Science & Engineering Student • Seeking Internship</p>
+            </div>
+
+            <div class="meta">
+              <div class="meta-item">📧 <a href="mailto:hisham456pkd@gmail.com"><b>hisham456pkd@gmail.com</b></a></div>
+              <div class="meta-item">💻 <a href="https://github.com/hisham456pkd-hash" target="_blank" rel="noreferrer"><b>github.com/hisham456pkd-hash</b></a></div>
+              <div class="meta-item">🔗 <a href="https://www.linkedin.com/in/mohamed-hisham-249110361" target="_blank" rel="noreferrer"><b>linkedin.com/in/mohamed-hisham</b></a></div>
+              <div class="meta-item">📍 <span>India</span></div>
+            </div>
           </div>
 
-          <div class="meta">
-            <div class="meta-item">📧 <a href="mailto:hisham456pkd@gmail.com"><b>hisham456pkd@gmail.com</b></a></div>
-            <div class="meta-item">💻 <a href="https://github.com/hisham456pkd-hash" target="_blank" rel="noreferrer"><b>github.com/hisham456pkd-hash</b></a></div>
-            <div class="meta-item">🔗 <a href="https://www.linkedin.com/in/mohamed-hisham-249110361" target="_blank" rel="noreferrer"><b>linkedin.com/in/mohamed-hisham</b></a></div>
-            <div class="meta-item">📍 <span>India</span></div>
-          </div>
-        </div>
-
-        <div class="grid">
-          <!-- LEFT -->
-          <div style="display:flex; flex-direction:column; gap:14px;">
-            <section class="section">
-              <h2>Profile</h2>
-              <p class="p">
-                CSE student with a strong interest in software development and web fundamentals.
-                I learn by building, improving step-by-step, and focusing on clean, practical work.
-                Currently seeking an internship to gain real-world experience and grow as a developer.
-              </p>
-            </section>
-
-            <section class="section">
-              <h2>Practice & Learning Work</h2>
-
-              <div class="item">
-                <div class="item-title">
-                  <b>HTML & CSS Practice</b>
-                  <span>Self-learning</span>
-                </div>
+          <div class="grid">
+            <!-- LEFT -->
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <section class="section reveal">
+                <h2>Profile</h2>
                 <p class="p">
-                  Practiced layouts and responsive UI patterns to build clean pages and sections.
+                  CSE student with a strong interest in software development and web fundamentals.
+                  I learn by building, improving step-by-step, and focusing on clean, practical work.
+                  Currently seeking an internship to gain real-world experience and grow as a developer.
                 </p>
-                <ul class="list">
-                  <li>Flexbox + Grid layouts</li>
-                  <li>Responsive sections (hero, cards, navigation)</li>
-                  <li>Clean UI consistency</li>
-                </ul>
-              </div>
+              </section>
 
-              <div class="item">
-                <div class="item-title">
-                  <b>JavaScript Basics Practice</b>
-                  <span>Self-learning</span>
+              <section class="section reveal">
+                <h2>Practice & Learning Work</h2>
+
+                <div class="item">
+                  <div class="item-title">
+                    <b>HTML & CSS Practice</b>
+                    <span>Self-learning</span>
+                  </div>
+                  <p class="p">Practiced layouts and responsive UI patterns to build clean pages and sections.</p>
+                  <ul class="list">
+                    <li>Flexbox + Grid layouts</li>
+                    <li>Responsive sections (hero, cards, navigation)</li>
+                    <li>Clean UI consistency</li>
+                  </ul>
                 </div>
-                <p class="p">
-                  Practiced DOM manipulation, events, and logic with small exercises.
-                </p>
-                <ul class="list">
-                  <li>DOM selection + event handling</li>
-                  <li>Form validation concepts</li>
-                  <li>Basic async understanding</li>
-                </ul>
-              </div>
 
-              <div class="item">
-                <div class="item-title">
-                  <b>Python & C Fundamentals Practice</b>
-                  <span>Academics</span>
+                <div class="item">
+                  <div class="item-title">
+                    <b>JavaScript Basics Practice</b>
+                    <span>Self-learning</span>
+                  </div>
+                  <p class="p">Practiced DOM manipulation, events, and logic with small exercises.</p>
+                  <ul class="list">
+                    <li>DOM selection + event handling</li>
+                    <li>Form validation concepts</li>
+                    <li>Basic async understanding</li>
+                  </ul>
                 </div>
-                <p class="p">
-                  Built fundamentals through beginner programs and logic problems.
-                </p>
-                <ul class="list">
-                  <li>Loops, functions, arrays, conditionals</li>
-                  <li>Logic building through small problems</li>
-                </ul>
-              </div>
-            </section>
 
-            <section class="section">
-              <h2>Career Goal</h2>
-              <p class="p">
-                Seeking internship opportunities where I can contribute with my fundamentals,
-                learn from real projects, and grow into a strong software engineer after graduation.
-              </p>
-            </section>
+                <div class="item">
+                  <div class="item-title">
+                    <b>Python & C Fundamentals Practice</b>
+                    <span>Academics</span>
+                  </div>
+                  <p class="p">Built fundamentals through beginner programs and logic problems.</p>
+                  <ul class="list">
+                    <li>Loops, functions, arrays, conditionals</li>
+                    <li>Logic building through small problems</li>
+                  </ul>
+                </div>
+              </section>
+
+              <section class="section reveal">
+                <h2>Career Goal</h2>
+                <p class="p">
+                  Seeking internship opportunities where I can contribute with my fundamentals,
+                  learn from real projects, and grow into a strong software engineer after graduation.
+                </p>
+              </section>
+            </div>
+
+            <!-- RIGHT -->
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <section class="section reveal">
+                <h2>Skills</h2>
+                <div class="chips">
+                  <span class="chip">HTML</span>
+                  <span class="chip">CSS</span>
+                  <span class="chip">JavaScript</span>
+                  <span class="chip">Python</span>
+                  <span class="chip">C</span>
+                  <span class="chip green">Git/GitHub</span>
+                  <span class="chip green">Responsive UI</span>
+                </div>
+              </section>
+
+              <section class="section reveal">
+                <h2>Tools</h2>
+                <ul class="list">
+                  <li>VS Code</li>
+                  <li>GitHub (basic)</li>
+                  <li>Browser DevTools</li>
+                </ul>
+              </section>
+
+              <section class="section reveal">
+                <h2>Currently Learning</h2>
+                <ul class="list">
+                  <li>JavaScript fundamentals (DOM + async)</li>
+                  <li>Problem solving + DSA basics</li>
+                  <li>How complete apps are structured</li>
+                </ul>
+              </section>
+
+              <section class="section reveal">
+                <h2>Education</h2>
+                <div class="item" style="padding-bottom:0;">
+                  <div class="item-title">
+                    <b>B.Tech — Computer Science & Engineering</b>
+                    <span>Ongoing</span>
+                  </div>
+                  <p class="p">Add college name later if you want.</p>
+                </div>
+              </section>
+
+              <section class="section reveal">
+                <h2>Links</h2>
+                <ul class="list">
+                  <li><a href="index.html"><b style="color:var(--text);">Portfolio</b></a></li>
+                  <li><a href="https://github.com/hisham456pkd-hash" target="_blank" rel="noreferrer"><b style="color:var(--text);">GitHub</b></a></li>
+                  <li><a href="https://www.linkedin.com/in/mohamed-hisham-249110361" target="_blank" rel="noreferrer"><b style="color:var(--text);">LinkedIn</b></a></li>
+                </ul>
+              </section>
+            </div>
           </div>
 
-          <!-- RIGHT -->
-          <div style="display:flex; flex-direction:column; gap:14px;">
-            <section class="section">
-              <h2>Skills</h2>
-              <div class="chips">
-                <span class="chip">HTML</span>
-                <span class="chip">CSS</span>
-                <span class="chip">JavaScript</span>
-                <span class="chip">Python</span>
-                <span class="chip">C</span>
-                <span class="chip green">Git/GitHub</span>
-                <span class="chip green">Responsive UI</span>
-              </div>
-            </section>
-
-            <section class="section">
-              <h2>Tools</h2>
-              <ul class="list">
-                <li>VS Code</li>
-                <li>GitHub (basic)</li>
-                <li>Browser DevTools</li>
-              </ul>
-            </section>
-
-            <section class="section">
-              <h2>Currently Learning</h2>
-              <ul class="list">
-                <li>JavaScript fundamentals (DOM + async)</li>
-                <li>Problem solving + DSA basics</li>
-                <li>How complete apps are structured</li>
-              </ul>
-            </section>
-
-            <section class="section">
-              <h2>Education</h2>
-              <div class="item" style="padding-bottom:0;">
-                <div class="item-title">
-                  <b>B.Tech — Computer Science & Engineering</b>
-                  <span>Ongoing</span>
-                </div>
-                <p class="p"> Jawaharlal College of Engineering and Technology (JCET) .</p>
-              </div>
-            </section>
-
-            <section class="section">
-              <h2>Links</h2>
-              <ul class="list">
-                <li><a href="index.html"><b style="color:var(--text);">Portfolio</b></a></li>
-                <li><a href="https://github.com/hisham456pkd-hash" target="_blank" rel="noreferrer"><b style="color:var(--text);">GitHub</b></a></li>
-                <li><a href="https://www.linkedin.com/in/mohamed-hisham-249110361" target="_blank" rel="noreferrer"><b style="color:var(--text);">LinkedIn</b></a></li>
-              </ul>
-            </section>
-          </div>
         </div>
       </div>
     </div>
   </main>
 
   <script>
+    // Theme toggle (sync with portfolio)
     const root = document.documentElement;
-    const btn = document.getElementById("themeBtn");
+    const themeBtn = document.getElementById("themeBtn");
+    const themeBtnMobile = document.getElementById("themeBtnMobile");
 
     function setTheme(theme){
       root.setAttribute("data-theme", theme);
       localStorage.setItem("theme", theme);
     }
-
     const saved = localStorage.getItem("theme");
-    if(saved){
-      setTheme(saved);
-    } else {
-      setTheme("dark");
-    }
+    setTheme(saved ? saved : "dark");
 
-    btn.addEventListener("click", () => {
+    function toggleTheme(){
       const current = root.getAttribute("data-theme");
       setTheme(current === "light" ? "dark" : "light");
+    }
+    themeBtn.addEventListener("click", toggleTheme);
+    themeBtnMobile.addEventListener("click", toggleTheme);
+
+    // Mobile menu
+    const hamburger = document.getElementById("hamburger");
+    const mobilePanel = document.getElementById("mobilePanel");
+
+    function toggleMenu(){
+      mobilePanel.classList.toggle("open");
+      hamburger.textContent = mobilePanel.classList.contains("open") ? "✕" : "☰";
+    }
+    hamburger.addEventListener("click", toggleMenu);
+    hamburger.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") toggleMenu();
     });
+
+    // Reveal animations
+    const reveals = document.querySelectorAll(".reveal");
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          io.unobserve(entry.target);
+        }
+      }
+    }, { threshold: 0.12 });
+    reveals.forEach(el => io.observe(el));
+
+    // Scroll progress bar
+    const progress = document.getElementById("progress");
+    window.addEventListener("scroll", () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progress.style.width = pct + "%";
+    }, { passive: true });
   </script>
 </body>
 </html>
